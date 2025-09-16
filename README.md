@@ -14,18 +14,13 @@ This document contains the full specification, source code, and presentation mat
 3.  [Tech Stack & Architecture](#️-tech-stack--architecture)
 4.  [Project Workflows](#-project-workflows)
 5.  [Setup and Installation Guide](#️-setup-and-installation-guide)
-6.  [Full Source Code](#-full-source-code)
-    - [Backend: `main.py`](#backend-mainpy)
-    - [Frontend: `prediction.tsx`](#frontend-srcpagespredictiontsx)
-    - [Frontend: `resources.tsx`](#frontend-srcpagesresourcestsx)
-    - [Frontend: `alerts.tsx`](#frontend-srcpagesalertstsx)
-7.  [Hackathon Presentation Guide](#-hackathon-presentation-guide)
+6.  [Hackathon Presentation Guide](#-hackathon-presentation-guide)
     - [The Pitch Script](#the-pitch-script)
     - [Presentation (PPT) Outline](#presentation-ppt-outline)
     - [Q&A Preparation Guide](#qa-preparation-guide)
-8.  [Competitive Analysis](#-competitive-analysis)
-9.  [Future Vision](#-future-vision)
-10. [Team Members](#-team-members)
+7.  [Competitive Analysis](#-competitive-analysis)
+8.  [Future Vision](#-future-vision)
+9. [Team Members](#-team-members)
 
 ---
 
@@ -164,5 +159,6 @@ Sneha
 Neeru
 Mansi
 Navjot Singh
+
 
 

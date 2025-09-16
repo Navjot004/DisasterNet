@@ -37,11 +37,9 @@ This document contains the full specification, source code, and presentation mat
 
 ### ### 📸 Screenshots
 
-*(Replace these with actual screenshots of your application)*
+<img width="1882" height="918" alt="image" src="https://github.com/user-attachments/assets/6a047209-5d1a-430c-be07-4bd4e848edd6" />
+<img width="1889" height="912" alt="image" src="https://github.com/user-attachments/assets/323133dc-7b18-465c-a7c0-9faedb6495fd" />
 
-| Prediction Page | Resource Management | Alerting Center |
-| :--- | :--- | :--- |
-| ![Prediction Page](path/to/prediction_ss.png) | ![Resource Page](path/to/resources_ss.png) | ![Alerts Page](path/to/alerts_ss.png) |
 
 ---
 
@@ -166,4 +164,5 @@ Sneha
 Neeru
 Mansi
 Navjot Singh
+
 

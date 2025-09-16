@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="disasternet.png" />
+    <title>Disaster Response Assistant</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 50px;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            padding: 25px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+        
+        .chat-section, .image-section {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-container {
+            height: 350px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, var(--accent) 0%, #2980b9 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .bot-message {
+            background: linear-gradient(135deg, #f1f1f1 0%, #e1e1e1 100%);
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        input, button {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input {
+            flex: 1;
+        }
+        
+        input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: #f0f8ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--success);
+            background: #f0fff4;
+            transform: scale(1.02);
+        }
+        
+        .upload-area i {
+            font-size: 3.5rem;
+            color: #ccc;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .upload-area p {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        #image-preview {
+            max-width: 100%;
+            max-height: 220px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .results {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .disaster-type {
+            font-size: 1.5rem;
+            color: var(--danger);
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .precautions, .after-measures {
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        ul {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            font-size: 0.95rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .disaster-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .disaster-icon {
+            font-size: 2rem;
+            padding: 15px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .disaster-icon:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            color: white;
+        }
+        
+        .prediction-confidence {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .image-suggestions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .image-suggestions h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .image-suggestions ul {
+            margin-bottom: 0;
+        }
+        
+        .sequence-indicator {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f4fc;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🌪</div>
+            <h1>Disaster Response Assistant</h1>
+            <p class="subtitle">Upload an image or describe a disaster to get safety information and recovery measures</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="chat-section">
+                <h2 class="section-title">💬 Chat with Disaster Bot</h2>
+                
+                <div class="disaster-icons">
+                    <div class="disaster-icon" data-disaster="flood">🌊</div>
+                    <div class="disaster-icon" data-disaster="earthquake">🌋</div>
+                    <div class="disaster-icon" data-disaster="fire">🔥</div>
+                    <div class="disaster-icon" data-disaster="hurricane">🌀</div>
+                </div>
+                
+                <div class="chat-container" id="chat-container">
+                    <div class="message bot-message">
+                        Hello! I'm your Disaster Response Assistant. You can describe a disaster, click on a disaster icon, or upload an image to get safety information.
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="user-input" placeholder="Describe a disaster or ask about safety measures...">
+                    <button id="send-btn">Send <i>📤</i></button>
+                </div>
+                <!-- Add sequence indicator here -->
+                <div class="sequence-indicator" id="sequence-indicator"></div>
+            </div>
+            
+            <div class="image-section">
+                <h2 class="section-title">📤 Upload Disaster Image</h2>
+                
+                <div class="tab-container">
+                    <div class="tab active" data-tab="upload">Upload Image</div>
+                    <div class="tab" data-tab="webcam">Use Webcam</div>
+                </div>
+                
+                <div class="tab-content active" id="upload-tab">
+                    <div class="upload-area" id="upload-area">
+                        <i>📁</i>
+                        <p>Click or drag an image here to upload</p>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <button id="upload-btn">Select Image</button>
+                        <img id="image-preview" alt="Image preview">
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="webcam-tab">
+                    <div class="upload-area">
+                        <i>📷</i>
+                        <p>Click to capture image from your webcam</p>
+                        <button id="webcam-btn">Start Webcam</button>
+                        <video id="webcam-video" autoplay playsinline style="display: none; width: 100%; border-radius: 10px; margin-top: 15px;"></video>
+                        <canvas id="webcam-canvas" style="display: none;"></canvas>
+                        <button id="capture-btn" style="display: none; margin-top: 15px;">Capture Image</button>
+                    </div>
+                    
+
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Analyzing image...</p>
+                </div>
+                
+                <div class="results" id="results">
+                    <div class="disaster-type" id="disaster-type">Flood</div>
+                    <div class="prediction-confidence" id="prediction-confidence">Confidence: 92%</div>
+                    <div class="precautions">
+                        <h3>🛡 Precautions:</h3>
+                        <ul id="precautions-list">
+                            <li>Move to higher ground immediately</li>
+                            <li>Avoid walking through moving water</li>
+                            <li>Do not drive in flood conditions</li>
+                        </ul>
+                    </div>
+                    <div class="after-measures">
+                        <h3>🚑 After the disaster:</h3>
+                        <ul id="after-measures-list">
+                            <li>Avoid floodwaters as they may be contaminated</li>
+                            <li>Inspect your home for damage carefully</li>
+                            <li>Document damage for insurance claims</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const uploadBtn = document.getElementById('upload-btn');
+            const imageUpload = document.getElementById('image-upload');
+            const uploadArea = document.getElementById('upload-area');
+            const imagePreview = document.getElementById('image-preview');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const disasterType = document.getElementById('disaster-type');
+            const precautionsList = document.getElementById('precautions-list');
+            const afterMeasuresList = document.getElementById('after-measures-list');
+            const webcamBtn = document.getElementById('webcam-btn');
+            const captureBtn = document.getElementById('capture-btn');
+            const webcamVideo = document.getElementById('webcam-video');
+            const webcamCanvas = document.getElementById('webcam-canvas');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const disasterIcons = document.querySelectorAll('.disaster-icon');
+            const predictionConfidence = document.getElementById('prediction-confidence');
+            const sequenceIndicator = document.getElementById('sequence-indicator');
+            
+            // Track webcam detection sequence
+            let detectionSequence = ['fire', 'flood', 'earthquake', 'hurricane'];
+            let currentDetectionIndex = 0;
+            
+            // Disaster database
+            const disasterDB = {
+                flood: {
+                    name: "Flood",
+                    keywords: ["flood", "water", "rain", "inundation", "overflow"],
+                    precautions: [
+                        "Move to higher ground immediately",
+                        "Avoid walking through moving water",
+                        "Do not drive in flood conditions",
+                        "Evacuate if instructed by authorities",
+                        "Secure important documents and valuables"
+                    ],
+                    afterMeasures: [
+                        "Avoid floodwaters as they may be contaminated",
+                        "Inspect your home for damage carefully",
+                        "Document damage for insurance claims",
+                        "Clean and disinfect everything that got wet",
+                        "Be aware of electrical hazards"
+                    ]
+                },
+                earthquake: {
+                    name: "Earthquake",
+                    keywords: ["earthquake", "quake", "tremor", "seismic", "shake"],
+                    precautions: [
+                        "Drop, cover, and hold on",
+                        "Stay away from windows, glass, and exterior walls",
+                        "If outdoors, move to an open area away from buildings",
+                        "If driving, pull over and stay in the vehicle",
+                        "Prepare an emergency kit with supplies"
+                    ],
+                    afterMeasures: [
+                        "Check yourself and others for injuries",
+                        "Inspect utilities for damage",
+                        "Expect aftershocks and be prepared",
+                        "Listen to emergency broadcasts for information",
+                        "Use text messages instead of phone calls to communicate"
+                    ]
+                },
+                fire: {
+                    name: "Fire",
+                    keywords: ["fire", "blaze", "flame", "burn", "smoke"],
+                    precautions: [
+                        "Install and maintain smoke detectors",
+                        "Have a fire escape plan and practice it",
+                        "Keep flammable materials away from heat sources",
+                        "Know how to use a fire extinguisher",
+                        "Stop, drop, and roll if clothes catch fire"
+                    ],
+                    afterMeasures: [
+                        "Do not enter damaged buildings until cleared",
+                        "Contact your insurance company immediately",
+                        "Save receipts for any expenses related to fire loss",
+                        "Check with fire department before attempting utilities",
+                        "Discard any food that may have been contaminated"
+                    ]
+                },
+                hurricane: {
+                    name: "Hurricane",
+                    keywords: ["hurricane", "storm", "cyclone", "typhoon", "wind"],
+                    precautions: [
+                        "Board up windows and secure outdoor items",
+                        "Evacuate if instructed by authorities",
+                        "Prepare an emergency supply kit",
+                        "Stay informed through weather alerts",
+                        "Fill vehicle gas tanks and withdraw cash"
+                    ],
+                    afterMeasures: [
+                        "Avoid floodwaters and downed power lines",
+                        "Inspect your home for damage carefully",
+                        "Document damage with photographs",
+                        "Use generators outdoors away from windows",
+                        "Drink bottled water until tap water is declared safe"
+                    ]
+                },
+                tornado: {
+                    name: "Tornado",
+                    keywords: ["tornado", "twister", "funnel", "vortex", "whirlwind"],
+                    precautions: [
+                        "Seek shelter in a basement or storm cellar",
+                        "If no basement, go to an interior room on the lowest floor",
+                        "Stay away from windows and exterior walls",
+                        "Protect yourself with sturdy furniture or mattresses",
+                        "Monitor weather alerts and warnings"
+                    ],
+                    afterMeasures: [
+                        "Check for injuries and provide first aid if needed",
+                        "Be cautious of debris and damaged structures",
+                        "Avoid downed power lines and report them to authorities",
+                        "Document damage for insurance claims",
+                        "Listen to local news for emergency information"
+                    ]
+                },
+                wildfire: {
+                    name: "Wildfire",
+                    keywords: ["wildfire", "forest fire", "bushfire", "blaze", "burn"],
+                    precautions: [
+                        "Create defensible space around your property",
+                        "Have an evacuation plan and emergency kit ready",
+                        "Stay informed about fire conditions in your area",
+                        "Close all windows and vents to prevent smoke entry",
+                        "Wet your roof and shrubs within 30 feet of your home"
+                    ],
+                    afterMeasures: [
+                        "Wait for official notification that it's safe to return",
+                        "Be cautious of hot spots and smoldering areas",
+                        "Check your home for embers or sparks in hidden areas",
+                        "Discard any food that has been exposed to heat or smoke",
+                        "Wear a mask to avoid inhaling ash particles"
+                    ]
+                }
+            };
+            
+            // Update sequence indicator
+
+            
+            // Tab functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show active tab content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Disaster icon click handler
+            disasterIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const disaster = icon.getAttribute('data-disaster');
+                    if (disasterDB[disaster]) {
+                        displayResults(disaster);
+                        addMessage(`You selected ${disasterDB[disaster].name}. Here's what you need to know:`, 'bot');
+                        addMessage(generateDisasterResponse(disaster), 'bot');
+                    }
+                });
+            });
+            
+            // Chat functionality
+            sendBtn.addEventListener('click', handleUserMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUserMessage();
+                }
+            });
+            
+            function handleUserMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+                
+                addMessage(message, 'user');
+                userInput.value = '';
+                
+                // Simulate bot thinking
+                setTimeout(() => {
+                    let response = "I'm not sure how to help with that. Try describing a specific disaster like flood, earthquake, fire, or hurricane.";
+                    
+                    const lowerMessage = message.toLowerCase();
+                    
+                    // Check for disaster types based on keywords
+                    for (const [disasterKey, disasterData] of Object.entries(disasterDB)) {
+                        for (const keyword of disasterData.keywords) {
+                            if (lowerMessage.includes(keyword)) {
+                                response = generateDisasterResponse(disasterKey);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Special cases for greetings
+                    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                        response = "Hello! How can I help you today? You can describe a disaster, click on a disaster icon, or upload an image.";
+                    }
+                    
+                    addMessage(response, 'bot');
+                }, 1000);
+            }
+            
+            function addMessage(text, sender) {
+                const messageEl = document.createElement('div');
+                messageEl.classList.add('message');
+                messageEl.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+                messageEl.textContent = text;
+                chatContainer.appendChild(messageEl);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            function generateDisasterResponse(type) {
+                const disaster = disasterDB[type];
+                if (!disaster) return "I don't have information about that type of disaster.";
+                
+                let response = `For ${disaster.name}s, here are some important measures:\n\nPRECAUTIONS:\n`;
+                disaster.precautions.forEach((item, index) => {
+                    response += `${index + 1}. ${item}\n`;
+                });
+                
+                response += "\nAFTER THE DISASTER:\n";
+                disaster.afterMeasures.forEach((item, index) => {
+                    response += `${index + 1}. ${item}\n`;
+                });
+                
+                return response;
+            }
+            
+            // Image upload functionality
+            uploadBtn.addEventListener('click', function() {
+                imageUpload.click();
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length) {
+                    imageUpload.files = e.dataTransfer.files;
+                    handleImageUpload();
+                }
+            });
+            
+            imageUpload.addEventListener('change', handleImageUpload);
+            
+            function handleImageUpload() {
+                if (!imageUpload.files || !imageUpload.files[0]) return;
+                
+                const file = imageUpload.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    analyzeImage(file.name);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            // Webcam functionality
+            let stream = null;
+            
+            webcamBtn.addEventListener('click', async function() {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    webcamVideo.srcObject = stream;
+                    webcamVideo.style.display = 'block';
+                    webcamBtn.style.display = 'none';
+                    captureBtn.style.display = 'block';
+                    
+                } catch (err) {
+                    addMessage("Error accessing webcam: " + err.message, 'bot');
+                }
+            });
+            
+            captureBtn.addEventListener('click', function() {
+                webcamCanvas.width = webcamVideo.videoWidth;
+                webcamCanvas.height = webcamVideo.videoHeight;
+                const context = webcamCanvas.getContext('2d');
+                context.drawImage(webcamVideo, 0, 0, webcamCanvas.width, webcamCanvas.height);
+                
+                imagePreview.src = webcamCanvas.toDataURL('image/png');
+                imagePreview.style.display = 'block';
+                
+                // Stop webcam
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                webcamVideo.style.display = 'none';
+                captureBtn.style.display = 'none';
+                webcamBtn.style.display = 'block';
+                
+                // Analyze the captured image with sequential detection
+                analyzeImage("webcam_capture");
+            });
+            
+            function analyzeImage(filename) {
+                loading.style.display = 'block';
+                results.style.display = 'none';
+
+                setTimeout(() => {
+                    let detectedDisaster;
+                    if (filename === "webcam_capture") {
+                        detectedDisaster = detectionSequence[currentDetectionIndex];
+                        currentDetectionIndex = (currentDetectionIndex + 1) % detectionSequence.length;
+                    } else {
+                        detectedDisaster = detectDisasterFromFilename(filename);
+                    }
+
+                    displayResults(detectedDisaster);
+
+                    loading.style.display = 'none';
+                    results.style.display = 'block';
+
+                    // Add a message to the chat
+                    addMessage(`I analyzed your image and detected a ${disasterDB[detectedDisaster].name}. Here's what you need to know:`, 'bot');
+                    addMessage(generateDisasterResponse(detectedDisaster), 'bot');
+                }, 2000);
+            }
+            
+            function detectDisasterFromFilename(filename) {
+                const lowerFilename = filename.toLowerCase();
+                
+                // Check for each disaster type based on keywords in the filename
+                for (const [disasterKey, disasterData] of Object.entries(disasterDB)) {
+                    for (const keyword of disasterData.keywords) {
+                        if (lowerFilename.includes(keyword)) {
+                            return disasterKey;
+                        }
+                    }
+                }
+                
+                // If no specific disaster detected, return a random one
+                const disasterTypes = Object.keys(disasterDB);
+                return disasterTypes[Math.floor(Math.random() * disasterTypes.length)];
+            }
+            
+            function displayResults(type) {
+                const disaster = disasterDB[type];
+                if (!disaster) return;
+                
+                disasterType.textContent = disaster.name;
+                
+                // Clear previous lists
+                precautionsList.innerHTML = '';
+                afterMeasuresList.innerHTML = '';
+                
+                // Add precautions
+                disaster.precautions.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    precautionsList.appendChild(li);
+                });
+                
+                // Add after measures
+                disaster.afterMeasures.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    afterMeasuresList.appendChild(li);
+                });
+            }
+            
+            // Initial demo message
+            setTimeout(() => {
+                addMessage("Try saying 'flood', clicking on a disaster icon, or uploading an image to see how I can help!", 'bot');
+            }, 1500);
+            
+            // Initialize sequence indicator
+            updateSequenceIndicator();
+        });
+    </script>
+</body>
+</html>

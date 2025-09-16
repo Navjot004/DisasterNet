@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DisasterNet</title>
+    <meta name="description" content="Lovable Generated Project" />
+    <meta name="author" content="Lovable" />
+
+    <link rel="icon" type="image/png" href="disasternet.png" />
+
+    <meta property="og:title" content="predict-respond-now" />
+    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <style>
+      /* Custom floating icon style */
+      #custom-float-btn {
+        position: fixed;
+        bottom: 100px; /* adjust so it doesn’t overlap chat icon */
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: url("disasternet.png") no-repeat center center / cover;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        z-index: 99999;
+      }
+
+      #custom-float-btn:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease-in-out;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <title>Predict Respond Now</title>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Chatbase embed -->
+    <script>
+      (function(){
+        if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+          window.chatbase=(...arguments)=>{
+            if(!window.chatbase.q){window.chatbase.q=[]}
+            window.chatbase.q.push(arguments)
+          };
+          window.chatbase=new Proxy(window.chatbase,{
+            get(target,prop){
+              if(prop==="q"){return target.q}
+              return(...args)=>target(prop,...args)
+            }
+          })
+        }
+        const onLoad=function(){
+          const script=document.createElement("script");
+          script.src="https://www.chatbase.co/embed.min.js";
+          script.id="rmX0FdQBK5ylNahk6LfdG";
+          script.domain="www.chatbase.co";
+          document.body.appendChild(script)
+        };
+        if(document.readyState==="complete"){onLoad()}
+        else{window.addEventListener("load",onLoad)}
+      })();
+    </script>
+
+    <!-- Custom floating button -->
+    <div id="custom-float-btn" title="Go to another page"></div>
+
+    <script>
+      document.getElementById("custom-float-btn").addEventListener("click", function () {
+        window.location.href = "webcam.html"; // 🔗 change link here
+      });
+    </script>
+  </body>
+</html>
